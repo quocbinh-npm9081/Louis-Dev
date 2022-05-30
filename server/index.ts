@@ -5,7 +5,7 @@ import express, { urlencoded } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-
+import routes from './routes';
 
 //Middlewareconst 
 const app = express();
@@ -20,11 +20,16 @@ const port = process.env.PORT || 5000;
 
 //database
 const db = require('./config/db')
+
 db.connect();
 
-//Routes
+//routes
+routes(app);
+
+
 app.get('/', (req: any, res: any) => {
     res.json({ msg: 'asd' })
+
 })
 
 app.listen(port, () => {
