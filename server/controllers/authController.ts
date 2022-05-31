@@ -18,7 +18,11 @@ const authControllers = {
                 name, account, password: passwordHashed
             })
 
-            res.json({ msg: "Regiser successfully!", data: newUser });
+            res.json({
+                status: "OK",
+                msg: "Regiser successfully!",
+                data: newUser
+            });
 
 
         } catch (error: any) {
