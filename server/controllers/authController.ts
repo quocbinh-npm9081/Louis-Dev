@@ -1,27 +1,38 @@
 import { Response, Request } from "express";
 import bcrypt from 'bcrypt';
 import { Jwt } from "jsonwebtoken";
+import { generateActiveToken } from "../config/token/generateToken";
 import userModel from "../models/userModel";
 
 const authControllers = {
+
+    //[POST] - REGISTER
     register: async (req: Request, res: Response) => {
         try {
             const { name, account, password } = req.body;
 
             const user = await userModel.findOne({ account });
 
-            //  if (!user) res.status(400).json({ msg: "Email or phone number already exists." }); //CLIENT ERROR REPONSES -  malformed request syntax, invalid request message framing, or deceptive request routing
+            if (user) res.status(400).json({ msg: "Email or phone number already exists." }); //CLIENT ERROR REPONSES -  malformed request syntax, invalid request message framing, or deceptive request routing
 
             const passwordHashed = await bcrypt.hash(password, 12);
 
-            const newUser = new userModel({
-                name, account, password: passwordHashed
-            })
+            //CREATE NEW USER
+            const newUser = {
+                name,
+                account,
+                password: passwordHashed
+            }
 
-            res.json({
+            const active_token = generateActiveToken({ newUser });
+
+
+            //RES SUCCESS
+            res.status(200).json({
                 status: "OK",
                 msg: "Regiser successfully!",
-                data: newUser
+                data: newUser,
+                active_token
             });
 
 
